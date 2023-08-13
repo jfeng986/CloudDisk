@@ -3,8 +3,10 @@ module go-zero-cloud-disk
 go 1.21.0
 
 require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/zeromicro/go-zero v1.5.4
+	golang.org/x/crypto v0.11.0
 	xorm.io/xorm v1.3.2
 )
 
