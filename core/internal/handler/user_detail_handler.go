@@ -9,16 +9,16 @@ import (
 	"go-zero-cloud-disk/core/internal/types"
 )
 
-func UserHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func UserDetailHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.LoginRequest
+		var req types.UserDetailRequest
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		l := logic.NewUserLogic(r.Context(), svcCtx)
-		resp, err := l.User(&req)
+		l := logic.NewUserDetailLogic(r.Context(), svcCtx)
+		resp, err := l.UserDetail(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {

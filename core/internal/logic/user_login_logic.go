@@ -11,21 +11,21 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type UserLogic struct {
+type UserLoginLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserLogic {
-	return &UserLogic{
+func NewUserLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserLoginLogic {
+	return &UserLoginLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *UserLogic) User(req *types.LoginRequest) (resp *types.LoginResponse, err error) {
+func (l *UserLoginLogic) UserLogin(req *types.LoginRequest) (resp *types.LoginResponse, err error) {
 	user := new(models.UserBasic)
 
 	has, err := models.Engine.Where("name = ? AND password = ?", req.Name, req.Password).Get(user)
