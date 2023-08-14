@@ -11,10 +11,10 @@ import (
 	"github.com/jordan-wright/email"
 )
 
-func MailSendCode(toEmail string) error {
+func EmailSendCode(toEmail string) (string, error) {
 	err := godotenv.Load("../.env")
 	if err != nil {
-		return err
+		return "", err
 	}
 	emailAddress := os.Getenv("EMAIL_ADDRESS")
 	emailPassword := os.Getenv("APP_PASSWORD")
@@ -25,7 +25,7 @@ func MailSendCode(toEmail string) error {
 	e.Subject = "Code has been sent, please check it out!"
 	e.HTML = []byte("Your auth code: <b>" + code + "</b>")
 	auth := smtp.PlainAuth("", emailAddress, emailPassword, "smtp.gmail.com")
-	return e.Send("smtp.gmail.com:587", auth)
+	return code, e.Send("smtp.gmail.com:587", auth)
 }
 
 func GenCode() string {
