@@ -28,7 +28,7 @@ func NewEmailCodeSendRegisterLogic(ctx context.Context, svcCtx *svc.ServiceConte
 }
 
 func (l *EmailCodeSendRegisterLogic) EmailCodeSendRegister(req *types.MailCodeSendRequest) error {
-	cnt, err := models.Engine.Where("email = ?", req.Email).Count(new(models.UserBasic))
+	cnt, err := l.svcCtx.Engine.Where("email = ?", req.Email).Count(new(models.UserBasic))
 	if err != nil {
 		return err
 	}
@@ -44,7 +44,7 @@ func (l *EmailCodeSendRegisterLogic) EmailCodeSendRegister(req *types.MailCodeSe
 	// request timeout
 	// err = models.RDB.Set(l.ctx, req.Email, code, 60*time.Second).Err()
 
-	err = models.RDB.Set(context.Background(), req.Email, code, 300*time.Second).Err()
+	err = l.svcCtx.RDB.Set(context.Background(), req.Email, code, 300*time.Second).Err()
 	if err != nil {
 		return err
 	}

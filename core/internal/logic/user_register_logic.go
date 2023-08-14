@@ -28,7 +28,7 @@ func NewUserRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *User
 }
 
 func (l *UserRegisterLogic) UserRegister(req *types.UserRegisterRequest) (resp *types.UserRegisterResponse, err error) {
-	code, err := models.RDB.Get(l.ctx, req.Email).Result()
+	code, err := l.svcCtx.RDB.Get(l.ctx, req.Email).Result()
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +38,7 @@ func (l *UserRegisterLogic) UserRegister(req *types.UserRegisterRequest) (resp *
 	}
 
 	// check if name already exist
-	cnt, err := models.Engine.Where("name = ?", req.Name).Count(new(models.UserBasic))
+	cnt, err := l.svcCtx.Engine.Where("name = ?", req.Name).Count(new(models.UserBasic))
 	if err != nil {
 		return nil, err
 	}
@@ -53,7 +53,7 @@ func (l *UserRegisterLogic) UserRegister(req *types.UserRegisterRequest) (resp *
 		Password: req.Password,
 		Email:    req.Email,
 	}
-	n, err := models.Engine.Insert(user)
+	n, err := l.svcCtx.Engine.Insert(user)
 	if err != nil {
 		return nil, err
 	}
