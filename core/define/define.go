@@ -11,4 +11,8 @@ type UserClaim struct {
 	jwt.StandardClaims
 }
 
-var JwtKey = "cloud-disk-key"
+var (
+	JwtKey    = "cloud-disk-key"
+	AWSBucket = "gobuckettest"
+	Region    = "us-west-2"
+)

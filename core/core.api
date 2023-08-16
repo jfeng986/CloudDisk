@@ -5,11 +5,15 @@ service core-api {
 	@handler UserDetail
 	get /user/detail(UserDetailRequest) returns (UserDetailResponse)
 
-	@handler MailCodeSendRegister
+	@handler EmailCodeSendRegister
 	post /email/code/register(MailCodeSendRequest) returns ()
 
 	@handler UserRegister
 	post /user/register(UserRegisterRequest) returns (UserRegisterResponse)
+
+	@handler FileUpload
+	post /file/upload(FileUploadRequest) returns (FileUploadResponse)
+
 }
 
 type LoginRequest {
@@ -43,4 +47,18 @@ type UserRegisterRequest {
 
 type UserRegisterResponse {
 	Token string `json:"token"`
+}
+
+type FileUploadRequest {
+	Hash string `json:"hash,optional"`
+	Name string `json:"name,optional"`
+	Ext  string `json:"ext,optional"`
+	Size int64  `json:"size,optional"`
+	Path string `json:"path,optional"`
+}
+
+type FileUploadResponse {
+	Identity string `json:"identity"`
+	Ext      string `json:"ext"`
+	Name     string `json:"name"`
 }
