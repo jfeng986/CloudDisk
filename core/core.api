@@ -21,6 +21,9 @@ service core-api{
 
 	@handler UserRepositorySave
 	post /user/repository/save(UserRepositorySaveRequest) returns ()
+
+	@handler UserFileList
+	get /user/file/list(UserFileListRequest) returns (UserFileListResponse)
 }
 
 type LoginRequest {
@@ -75,4 +78,25 @@ type UserRepositorySaveRequest {
 	RepositoryIdentity string `json:"repositoryIdentity"`
 	Ext                string `json:"ext"`
 	Name               string `json:"name"`
+}
+
+type UserFileListRequest {
+	Identity string `json:"identity,optional"`
+	Page     int    `json:"page,optional"`
+	Size     int    `json:"size,optional"`
+}
+
+type UserFileListResponse {
+	List  []*UserFile `json:"list"`
+	Count int64       `json:"count"`
+}
+
+type UserFile {
+	Id                 int64  `json:"id"`
+	Identity           string `json:"identity"`
+	RepositoryIdentity string `json:"repository_identity"`
+	Name               string `json:"name"`
+	Ext                string `json:"ext"`
+	Path               string `json:"path"`
+	Size               int64  `json:"size"`
 }

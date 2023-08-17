@@ -7,12 +7,12 @@ import (
 
 	"github.com/go-redis/redis/v8"
 	"github.com/zeromicro/go-zero/rest"
-	"xorm.io/xorm"
+	"gorm.io/gorm"
 )
 
 type ServiceContext struct {
 	Config config.Config
-	Engine *xorm.Engine
+	MDB    *gorm.DB
 	RDB    *redis.Client
 	Auth   rest.Middleware
 }
@@ -20,7 +20,7 @@ type ServiceContext struct {
 func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
 		Config: c,
-		Engine: models.InitMysql(c.Mysql.MysqlAddr),
+		MDB:    models.InitMysql(c.Mysql.MysqlAddr),
 		RDB:    models.InitRedis(c),
 		Auth:   middleware.NewAuthMiddleware().Handle,
 	}

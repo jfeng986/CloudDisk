@@ -38,7 +38,8 @@ func (l *UserRegisterLogic) UserRegister(req *types.UserRegisterRequest) (resp *
 	}
 
 	// check if name already exist
-	cnt, err := l.svcCtx.Engine.Where("name = ?", req.Name).Count(new(models.UserBasic))
+	var cnt int64
+	err = l.svcCtx.MDB.Model(&models.UserBasic{}).Where("name = ?", req.Name).Count(&cnt).Error
 	if err != nil {
 		return nil, err
 	}
@@ -53,11 +54,20 @@ func (l *UserRegisterLogic) UserRegister(req *types.UserRegisterRequest) (resp *
 		Password: req.Password,
 		Email:    req.Email,
 	}
-	n, err := l.svcCtx.Engine.Insert(user)
+	result := l.svcCtx.MDB.Create(user)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	log.Println("insert user: ID", user.Id)
+
+	token, err := utils.GenerateToken(user.Id, user.Identity, user.Name, 3600)
 	if err != nil {
 		return nil, err
 	}
-	log.Println("insert user: row", n)
 
-	return
+	resp = &types.UserRegisterResponse{
+		Token: token,
+	}
+
+	return resp, nil
 }

@@ -2,7 +2,7 @@ package logic
 
 import (
 	"context"
-	"fmt"
+	"log"
 
 	"go-zero-cloud-disk/core/internal/svc"
 	"go-zero-cloud-disk/core/internal/types"
@@ -35,10 +35,10 @@ func (l *UserRepositorySaveLogic) UserRepositorySave(req *types.UserRepositorySa
 		Ext:                req.Ext,
 		Name:               req.Name,
 	}
-	_, err := l.svcCtx.Engine.Insert(ur)
-	if err != nil {
-		fmt.Println(err)
-		return err
+	result := l.svcCtx.MDB.Create(ur)
+	if result.Error != nil {
+		log.Println(result.Error)
+		return result.Error
 	}
 	return nil
 }

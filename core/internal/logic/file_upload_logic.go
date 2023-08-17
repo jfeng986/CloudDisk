@@ -34,8 +34,7 @@ func (l *FileUploadLogic) FileUpload(req *types.FileUploadRequest) (resp *types.
 		Size:     req.Size,
 		Path:     req.Path,
 	}
-	_, err = l.svcCtx.Engine.Insert(rp)
-	if err != nil {
+	if err := l.svcCtx.MDB.Create(rp).Error; err != nil {
 		return nil, err
 	}
 

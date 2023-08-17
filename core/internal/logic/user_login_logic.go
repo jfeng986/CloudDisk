@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"errors"
 
 	"go-zero-cloud-disk/core/internal/svc"
 	"go-zero-cloud-disk/core/internal/types"
@@ -9,6 +10,7 @@ import (
 	"go-zero-cloud-disk/utils"
 
 	"github.com/zeromicro/go-zero/core/logx"
+	"gorm.io/gorm"
 )
 
 type UserLoginLogic struct {
@@ -28,17 +30,26 @@ func NewUserLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserLog
 func (l *UserLoginLogic) UserLogin(req *types.LoginRequest) (resp *types.LoginResponse, err error) {
 	user := new(models.UserBasic)
 
-	has, err := l.svcCtx.Engine.Where("name = ? AND password = ?", req.Name, req.Password).Get(user)
-	if err != nil {
-		return nil, err
+	// find the first record with the given condition
+	result := l.svcCtx.MDB.Where("name = ? AND password = ?", req.Name, req.Password).First(user)
+
+	// return a RecordNotFound error if no record was found
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return nil, errors.New("incorrect name or password")
 	}
-	if !has {
-		return nil, err
+
+	if result.Error != nil {
+		return nil, result.Error
 	}
 
 	token, err := utils.GenerateToken(user.Id, user.Identity, user.Name, 3600)
-	resp = new(types.LoginResponse)
-	resp.Token = token
+	if err != nil {
+		return nil, err
+	}
+
+	resp = &types.LoginResponse{
+		Token: token,
+	}
 
 	return resp, nil
 }

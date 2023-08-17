@@ -2,6 +2,7 @@ package handler
 
 import (
 	"crypto/md5"
+	"errors"
 	"fmt"
 	"net/http"
 	"path"
@@ -13,6 +14,7 @@ import (
 	"go-zero-cloud-disk/utils"
 
 	"github.com/zeromicro/go-zero/rest/httpx"
+	"gorm.io/gorm"
 )
 
 func FileUploadHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
@@ -38,13 +40,14 @@ func FileUploadHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		hash := fmt.Sprintf("%x", md5.Sum(b))
 		rp := new(models.RepositoryPool)
 
-		// check if file exist
-		has, err := svcCtx.Engine.Where("hash = ?", hash).Get(rp)
-		if err != nil {
-			httpx.Error(w, err)
-			return
-		}
-		if has {
+		// check if file exist using GORM
+		result := svcCtx.MDB.Where("hash = ?", hash).First(rp)
+		if result.Error != nil {
+			if !errors.Is(result.Error, gorm.ErrRecordNotFound) {
+				httpx.Error(w, result.Error)
+				return
+			}
+		} else {
 			httpx.OkJson(w, &types.FileUploadResponse{Identity: rp.Identity, Ext: rp.Ext, Name: rp.Name})
 			return
 		}

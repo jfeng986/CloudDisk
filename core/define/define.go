@@ -15,4 +15,6 @@ var (
 	JwtKey    = "cloud-disk-key"
 	AWSBucket = "gobuckettest"
 	Region    = "us-west-2"
+	PageSize  = 20
+	Datetime  = "2006-01-02 15:04:05"
 )

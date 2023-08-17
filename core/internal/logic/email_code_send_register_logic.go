@@ -28,7 +28,8 @@ func NewEmailCodeSendRegisterLogic(ctx context.Context, svcCtx *svc.ServiceConte
 }
 
 func (l *EmailCodeSendRegisterLogic) EmailCodeSendRegister(req *types.MailCodeSendRequest) error {
-	cnt, err := l.svcCtx.Engine.Where("email = ?", req.Email).Count(new(models.UserBasic))
+	var cnt int64
+	err := l.svcCtx.MDB.Model(&models.UserBasic{}).Where("email = ?", req.Email).Count(&cnt).Error
 	if err != nil {
 		return err
 	}

@@ -9,6 +9,7 @@ import (
 	"go-zero-cloud-disk/core/models"
 
 	"github.com/zeromicro/go-zero/core/logx"
+	"gorm.io/gorm"
 )
 
 type UserDetailLogic struct {
@@ -28,14 +29,18 @@ func NewUserDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserDe
 func (l *UserDetailLogic) UserDetail(req *types.UserDetailRequest) (resp *types.UserDetailResponse, err error) {
 	resp = &types.UserDetailResponse{}
 	ub := new(models.UserBasic)
-	has, err := l.svcCtx.Engine.Where("identity = ?", req.Identity).Get(ub)
-	if err != nil {
-		return nil, err
-	}
 
-	if !has {
+	result := l.svcCtx.MDB.Where("identity = ?", req.Identity).First(&ub)
+
+	// return a RecordNotFound error if no record was found
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil, errors.New("user not exist")
 	}
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
 	resp.Name = ub.Name
 	resp.Email = ub.Email
 	return
