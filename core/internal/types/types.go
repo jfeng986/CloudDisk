@@ -47,3 +47,10 @@ type FileUploadResponse struct {
 	Ext      string `json:"ext"`
 	Name     string `json:"name"`
 }
+
+type UserRepositorySaveRequest struct {
+	ParentId           int64  `json:"parentId"`
+	RepositoryIdentity string `json:"repositoryIdentity"`
+	Ext                string `json:"ext"`
+	Name               string `json:"name"`
+}

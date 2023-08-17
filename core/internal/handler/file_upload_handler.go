@@ -37,6 +37,8 @@ func FileUploadHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		}
 		hash := fmt.Sprintf("%x", md5.Sum(b))
 		rp := new(models.RepositoryPool)
+
+		// check if file exist
 		has, err := svcCtx.Engine.Where("hash = ?", hash).Get(rp)
 		if err != nil {
 			httpx.Error(w, err)
@@ -47,6 +49,7 @@ func FileUploadHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
+		// upload to aws
 		AWSPath, err := utils.AWSUpload(r)
 		if err != nil {
 			httpx.Error(w, err)
