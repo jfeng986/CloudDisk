@@ -24,6 +24,9 @@ service core-api{
 
 	@handler UserFileList
 	get /user/file/list(UserFileListRequest) returns (UserFileListResponse)
+
+	@handler UserFileNameUpdate
+	post /user/file/name/update(UserFileNameUpdateRequest) returns ()
 }
 
 type LoginRequest {
@@ -99,4 +102,9 @@ type UserFile {
 	Ext                string `json:"ext"`
 	Path               string `json:"path"`
 	Size               int64  `json:"size"`
+}
+
+type UserFileNameUpdateRequest {
+	Identity string `json:"identity"`
+	Name     string `json:"name"`
 }

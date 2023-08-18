@@ -29,7 +29,7 @@ func (l *UserFileListLogic) UserFileList(req *types.UserFileListRequest, userIde
 	uf := make([]*types.UserFile, 0)
 	resp = new(types.UserFileListResponse)
 
-	// Pagination parameters
+	// Pagination
 	size := req.Size
 	if size <= 0 {
 		size = define.PageSize
