@@ -1,4 +1,5 @@
-## go-zero cloud disk
+## Cloud Disk Demo
+Lightweight cloud disk demo, based on go-zero, MySQL, Redis and Gorm and using AWS S3
 
 ```
 # use docker to create mysql
@@ -16,3 +17,16 @@ go run core.go -f etc/core-api.yaml
 # use .api to generate code
 goctl api go -api core.api -dir . -style go_zero
 ```
+## Main Features
+- User module
+  - Password login
+  - Authorization
+  - User details
+  - Register by receiving an email code
+- Repository module
+  - Connect to AWS S3 bucket
+  - File upload
+  - File multipart upload
+  - File list
+  - File associated storage
+  - Folder creation
