@@ -1,5 +1,5 @@
-## Cloud Disk Demo
-Lightweight cloud disk demo, based on go-zero, MySQL, Redis and Gorm and using AWS S3
+## Cloud Disk
+Lightweight cloud disk, based on go-zero, MySQL, Redis and Gorm and using AWS S3
 
 ```
 # use docker to create mysql
